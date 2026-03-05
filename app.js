@@ -7,7 +7,7 @@ dotenv.config()
 const app=express()
 app.use(cors())
 app.use(express.json())
-mongoose.connect("mongodb://localhost:27017/mydb")
+mongoose.connect(process.env.MONGO_URI)
 const itemSchema=new mongoose.Schema({name:String})
 const Item=mongoose.model("Item",itemSchema)
 app.get('/items', async (req,res)=>{
@@ -41,6 +41,6 @@ app.delete('/items/:id',async (req,res)=>{
 })
 
 const PORT = process.env.PORT || 5001;
-app.listen(process.env.PORT,()=>{
+app.listen(PORT,()=>{
      console.log("Server running on port", PORT)
 })
