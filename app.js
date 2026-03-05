@@ -1,14 +1,15 @@
 
+import express from "express"
 import mongoose from "mongoose"
-require ("dotenv").config()
-const express=require("express")
-const cors=(require("cors"))
+import cors from "cors"
+import dotenv from "dotenv"
+dotenv.config()
 const app=express()
 app.use(cors())
 app.use(express.json())
 mongoose.connect("mongodb://localhost:27017/mydb")
 const itemSchema=new mongoose.Schema({name:String})
-const Item=mongoose.model("item",itemSchema)
+const Item=mongoose.model("Item",itemSchema)
 app.get('/items', async (req,res)=>{
     const items=await Item.find()
     res.json(items)
@@ -17,13 +18,13 @@ app.post('/items', async (req,res)=>{
    console.log(req.body)
    const {name}=req.body
   
-  const newItem = await Item.create({item:name})
+  const newItem = await Item.create({name})
    res.json(newItem)
 })
 app.put('/items/:id', async (req,res)=>{
     const id = req.params.id
     const {name}=req.body
-    const updatedItem=await Item.findByIdAndUpdate(id,{item:name},{new:true})
+    const updatedItem=await Item.findByIdAndUpdate(id,{name},{new:true})
     if(!updatedItem){
         return res.status(404).json({message :"Item not found "})
     }
@@ -41,5 +42,5 @@ app.delete('/items/:id',async (req,res)=>{
 
 const PORT = process.env.PORT || 5001;
 app.listen(process.env.PORT,()=>{
-     console.log("Server running on port", process.env.PORT)
+     console.log("Server running on port", PORT)
 })
