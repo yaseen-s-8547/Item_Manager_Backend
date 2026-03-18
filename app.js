@@ -1,16 +1,19 @@
 
 import express from "express"
-import router from "./Routes/itemRoutes"
+import mongoose from "mongoose"
 import cors from "cors"
 import dotenv from "dotenv"
-import connectDB from "./Config.js/db"
 dotenv.config()
 const app=express()
 app.use(cors())
 app.use(express.json())
- connectDB()
- app.use("/",router)
-
+mongoose.connect(process.env.MONGO_URI)
+const itemSchema=new mongoose.Schema({name:String})
+const Item=mongoose.model("Item",itemSchema)
+app.get('/items', async (req,res)=>{
+    const items=await Item.find()
+    res.json(items)
+})
 app.post('/items', async (req,res)=>{
    console.log(req.body)
    const {name}=req.body
